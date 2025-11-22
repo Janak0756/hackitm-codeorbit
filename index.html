@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITM (SLS) Baroda University Canteen</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>ITM (SLS) Baroda University Canteen</h1>
+                        <p>Digital Ordering & Queue Management System</p>
+                    </div>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
+                        <li><a href="#" class="nav-link" data-page="menu">Menu</a></li>
+                        <li><a href="#" class="nav-link" data-page="orders">My Orders</a></li>
+                        <li><a href="#" class="nav-link" data-page="feedback">Feedback</a></li>
+                        <li><a href="#" class="nav-link" data-page="admin" id="admin-nav" style="display: none;">Admin</a></li>
+                    </ul>
+                </nav>
+                <div class="user-info">
+                    <div class="user-avatar" id="user-avatar">GU</div>
+                    <span id="user-name">Guest User</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Welcome to ITM Canteen Portal</h2>
+                </div>
+                <p>Order your favorite meals digitally and avoid long queues at the canteen. Our system provides a seamless ordering experience for students, faculty, and hostel residents.</p>
+                
+                <div class="qr-section">
+                    <h3>Scan QR Code to Order</h3>
+                    <p>Point your camera at the QR code to access the ordering system</p>
+                    <div class="qr-code">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <button class="btn btn-primary" id="scan-qr-btn">Scan QR Code</button>
+                    <p>Alternatively, select your login type below</p>
+                </div>
+
+                <div class="login-options">
+                    <div class="login-card student" data-type="student">
+                        <div class="login-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="login-content">
+                            <h3>Student Login</h3>
+                            <p>Access with your student credentials</p>
+                            <button class="btn btn-success">Login as Student</button>
+                        </div>
+                    </div>
+                    
+                    <div class="login-card faculty" data-type="faculty">
+                        <div class="login-icon">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <div class="login-content">
+                            <h3>Faculty Login</h3>
+                            <p>Access with your faculty credentials</p>
+                            <button class="btn btn-info">Login as Faculty</button>
+                        </div>
+                    </div>
+                    
+                    <div class="login-card hostel" data-type="hostel">
+                        <div class="login-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <div class="login-content">
+                            <h3>Hostel Student Login</h3>
+                            <p>Access with your hostel credentials</p>
+                            <button class="btn btn-warning">Login as Hostel Student</button>
+                        </div>
+                    </div>
+                    
+                    <div class="login-card admin" data-type="admin">
+                        <div class="login-icon">
+                            <i class="fas fa-user-cog"></i>
+                        </div>
+                        <div class="login-content">
+                            <h3>Admin Login</h3>
+                            <p>Manage the canteen portal</p>
+                            <button class="btn btn-danger">Login as Admin</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QR Scanner Page -->
+        <div id="qr-scanner" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">QR Code Scanner</h2>
+                    <button class="btn btn-secondary" id="back-from-qr">Back</button>
+                </div>
+                <div class="camera-section">
+                    <p>Position the QR code within the frame to scan</p>
+                    <div class="camera-container">
+                        <div id="camera-preview">
+                            <i class="fas fa-camera" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                            <p>Camera Preview</p>
+                        </div>
+                        <video id="camera-video" muted playsinline></video>
+                        <canvas id="camera-canvas"></canvas>
+                        <div class="camera-overlay">
+                            <div class="scanner-frame">
+                                <div class="scanner-animation"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="start-camera">Start Camera</button>
+                    <button class="btn btn-secondary" id="stop-camera" style="display: none;">Stop Camera</button>
+                    <div id="qr-result" style="margin-top: 20px; font-weight: 600;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Forms -->
+        <div id="student-login" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Student Login</h2>
+                    <button class="btn btn-secondary" id="back-from-student">Back</button>
+                </div>
+                <form id="student-login-form">
+                    <div class="form-group">
+                        <label for="student-id">Student ID</label>
+                        <input type="text" id="student-id" class="form-control" placeholder="Enter your student ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-password">Password</label>
+                        <input type="password" id="student-password" class="form-control" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="faculty-login" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Faculty Login</h2>
+                    <button class="btn btn-secondary" id="back-from-faculty">Back</button>
+                </div>
+                <form id="faculty-login-form">
+                    <div class="form-group">
+                        <label for="faculty-id">Faculty ID</label>
+                        <input type="text" id="faculty-id" class="form-control" placeholder="Enter your faculty ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="faculty-password">Password</label>
+                        <input type="password" id="faculty-password" class="form-control" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-info btn-block">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="hostel-login" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Hostel Student Login</h2>
+                    <button class="btn btn-secondary" id="back-from-hostel">Back</button>
+                </div>
+                <form id="hostel-login-form">
+                    <div class="form-group">
+                        <label for="hostel-id">Hostel ID</label>
+                        <input type="text" id="hostel-id" class="form-control" placeholder="Enter your hostel ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="hostel-password">Password</label>
+                        <input type="password" id="hostel-password" class="form-control" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning btn-block">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="admin-login" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Admin Login</h2>
+                    <button class="btn btn-secondary" id="back-from-admin">Back</button>
+                </div>
+                <form id="admin-login-form">
+                    <div class="form-group">
+                        <label for="admin-name">Admin Name</label>
+                        <input type="text" id="admin-name" class="form-control" placeholder="Enter admin name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-password">Password</label>
+                        <input type="password" id="admin-password" class="form-control" placeholder="Enter admin password" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger btn-block">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Camera Page for Hostel Students -->
+        <div id="camera-page" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Scan Your Hostel ID</h2>
+                    <button class="btn btn-secondary" id="back-from-camera">Back</button>
+                </div>
+                <div class="camera-section">
+                    <p>Please allow camera access to scan your hostel ID barcode. This will verify your eligibility for free thali.</p>
+                    <div class="camera-container">
+                        <div id="hostel-camera-preview">
+                            <i class="fas fa-camera" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                            <p>Camera Preview</p>
+                        </div>
+                        <video id="hostel-camera-video" muted playsinline></video>
+                        <canvas id="hostel-camera-canvas"></canvas>
+                        <div class="camera-overlay">
+                            <div class="scanner-frame">
+                                <div class="scanner-animation"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-warning" id="start-hostel-camera">Start Camera</button>
+                    <button class="btn btn-secondary" id="stop-hostel-camera" style="display: none;">Stop Camera</button>
+                    <button class="btn btn-secondary" id="skip-scanning" style="margin-top: 10px;">Skip Scanning</button>
+                    <div id="hostel-scan-result" style="margin-top: 20px; font-weight: 600;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Page -->
+        <div id="menu" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Our Menu</h2>
+                    <div>
+                        <span id="user-balance" style="margin-right: 15px; font-weight: 600;">Balance: ₹0</span>
+                        <button class="btn btn-secondary" id="logout-btn">Logout</button>
+                    </div>
+                </div>
+                
+                <div class="menu-categories">
+                    <button class="category-btn active" data-category="all">All Items</button>
+                    <button class="category-btn" data-category="thali">Thali Options</button>
+                    <button class="category-btn" data-category="snacks">Snacks</button>
+                    <button class="category-btn" data-category="beverages">Beverages</button>
+                </div>
+
+                <div class="menu-items" id="menu-items-container">
+                    <!-- Menu items will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="card order-summary">
+                <div class="card-header">
+                    <h2 class="card-title">Your Order</h2>
+                </div>
+                <div class="order-items" id="order-items">
+                    <!-- Order items will be added here dynamically -->
+                    <p id="empty-cart-message">Your cart is empty. Add items from the menu.</p>
+                </div>
+                <div class="order-total">
+                    <span>Total:</span>
+                    <span id="order-total">₹0</span>
+                </div>
+                <button class="btn btn-success btn-block" id="place-order-btn" disabled>Place Order</button>
+            </div>
+        </div>
+
+        <!-- Orders Page -->
+        <div id="orders" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">My Orders</h2>
+                    <button class="btn btn-secondary" id="logout-from-orders">Logout</button>
+                </div>
+                <div id="user-orders">
+                    <!-- Orders will be displayed here -->
+                    <p>No orders yet. Place an order from the menu.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Page -->
+        <div id="feedback" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Feedback & Suggestions</h2>
+                    <button class="btn btn-secondary" id="back-from-feedback">Back</button>
+                </div>
+                <div class="feedback-section">
+                    <p>We value your feedback! Please share your experience with our canteen services.</p>
+                    
+                    <form id="feedback-form">
+                        <div class="form-group">
+                            <label for="feedback-type">Feedback Type</label>
+                            <select id="feedback-type" class="form-control" required>
+                                <option value="">Select feedback type</option>
+                                <option value="compliment">Compliment</option>
+                                <option value="suggestion">Suggestion</option>
+                                <option value="complaint">Complaint</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Overall Rating</label>
+                            <div class="rating">
+                                <span class="rating-star" data-rating="1">★</span>
+                                <span class="rating-star" data-rating="2">★</span>
+                                <span class="rating-star" data-rating="3">★</span>
+                                <span class="rating-star" data-rating="4">★</span>
+                                <span class="rating-star" data-rating="5">★</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="feedback-message">Your Feedback</label>
+                            <textarea id="feedback-message" class="form-control" rows="5" placeholder="Please share your feedback here..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">Submit Feedback</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Page -->
+        <div id="admin" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Admin Dashboard</h2>
+                    <button class="btn btn-secondary" id="logout-from-admin">Logout</button>
+                </div>
+                
+                <div class="admin-stats">
+                    <div class="stat-card orders">
+                        <h3>Today's Orders</h3>
+                        <div class="stat-value" id="today-orders">0</div>
+                        <p id="orders-change">+0% from yesterday</p>
+                    </div>
+                    <div class="stat-card revenue">
+                        <h3>Revenue</h3>
+                        <div class="stat-value" id="today-revenue">₹0</div>
+                        <p id="revenue-change">+0% from yesterday</p>
+                    </div>
+                    <div class="stat-card pending">
+                        <h3>Pending Orders</h3>
+                        <div class="stat-value" id="pending-orders">0</div>
+                        <p>Awaiting preparation</p>
+                    </div>
+                    <div class="stat-card users">
+                        <h3>Active Users</h3>
+                        <div class="stat-value" id="active-users">0</div>
+                        <p>Currently online</p>
+                    </div>
+                </div>
+
+                <div class="admin-sections">
+                    <div class="admin-section">
+                        <h3>Order Management</h3>
+                        <div class="order-list" id="admin-order-list">
+                            <!-- Orders will be listed here dynamically -->
+                        </div>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <h3>Table Management</h3>
+                        <div class="tables-grid" id="tables-grid">
+                            <!-- Tables will be listed here dynamically -->
+                        </div>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <h3>Quick Actions</h3>
+                        <div style="display: grid; gap: 15px;">
+                            <button class="btn btn-info" id="manage-menu-btn">Manage Menu</button>
+                            <button class="btn btn-info" id="view-feedback-btn">View Feedback</button>
+                            <button class="btn btn-info" id="view-reports-btn">View Reports</button>
+                            <button class="btn btn-info" id="system-settings-btn">System Settings</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Management Page -->
+        <div id="menu-management" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Menu Management</h2>
+                    <button class="btn btn-secondary" id="back-from-menu-management">Back to Dashboard</button>
+                </div>
+                
+                <div class="menu-management">
+                    <div class="menu-form">
+                        <h3>Add New Item</h3>
+                        <form id="add-menu-item-form">
+                            <div class="form-group">
+                                <label for="item-name">Item Name</label>
+                                <input type="text" id="item-name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="item-description">Description</label>
+                                <textarea id="item-description" class="form-control" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="item-price">Price (₹)</label>
+                                <input type="number" id="item-price" class="form-control" min="0" step="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="item-category">Category</label>
+                                <select id="item-category" class="form-control" required>
+                                    <option value="thali">Thali</option>
+                                    <option value="snacks">Snacks</option>
+                                    <option value="beverages">Beverages</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-block">Add Item</button>
+                        </form>
+                    </div>
+                    
+                    <div>
+                        <h3>Current Menu Items</h3>
+                        <div class="admin-menu-items" id="admin-menu-items">
+                            <!-- Menu items for admin management -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ITM (SLS) Baroda University</h3>
+                    <p>Providing quality food services to students, faculty, and staff since 2005.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> ITM Road, Baroda, Gujarat</p>
+                    <p><i class="fas fa-phone"></i> +91 265 1234567</p>
+                    <p><i class="fas fa-envelope"></i> itmbu.ac.in</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="#" class="footer-nav" data-page="home">Home</a>
+                    <a href="#" class="footer-nav" data-page="menu">Menu</a>
+                    <a href="#" class="footer-nav" data-page="orders">My Orders</a>
+                    <a href="#" class="footer-nav" data-page="feedback">Feedback</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Opening Hours</h3>
+                    <p>Monday - Friday: 8:00 AM - 8:00 PM</p>
+                    <p>Saturday: 9:00 AM - 6:00 PM</p>
+                    <p>Sunday: 10:00 AM - 4:00 PM</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; ITM (SLS) Baroda University Canteen. All rights reserved.</p>
+                <p>Website Design By Janak Parmar | Backend Work By Meet Shah | Pitcher By Manthan Prajapati</p>
+                <p>Website Developer Team: CodeOrbit</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <div class="notification-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">Success</div>
+            <div class="notification-message">Operation completed successfully</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
